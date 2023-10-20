@@ -1,8 +1,9 @@
 import * as moment from 'moment';
 import { AuthenticatedUser } from '../interfaces/authenticated-user.interface';
-import { UpdateOneToManyAssociationsOptions } from '../interfaces/update-one-to-many-associations-options.interface';
-import { CreatedByEntity } from '../models/created-by.entity';
-import { AttributesOf } from '../types/attributes-of.type';
+import { UpdateOneToManyAssociationsOptions } from '../interfaces';
+import { CreatedByEntity } from '../models';
+import { AttributesOf } from '../types';
+import { UpdateOptions } from 'sequelize';
 
 export async function updateOneToManyAssociations<
     T extends CreatedByEntity<T>,
@@ -55,14 +56,14 @@ export async function updateOneToManyAssociations<
             // if the record is being updated, ensure it is not deleted
             filledRecord.deletedAt = null;
             filledRecord.deletedById = null;
-            
+
             // update sort order if necessary
             updatePromises.push(
-                relatedObject.update(filledRecord, { transaction }) as unknown as Promise<T>
+                await relatedObject.update(filledRecord, { transaction }) as unknown as Promise<T>
             );
         }
     }
-    const createPromise: Promise<T[]> = childTableModel.bulkCreate(recordsToCreate, {
+    const createPromise: Promise<T[]> = await childTableModel.bulkCreate(recordsToCreate as any, {
         returning: true,
         transaction
     }) as unknown as Promise<T[]>;
@@ -74,16 +75,16 @@ export async function updateOneToManyAssociations<
     let deletePromise = new Promise<[number, T[]]>(resolve => resolve([0, []]));
     // delete those records
     if (idsToDelete.length > 0 && !upsertOnly) {
-        deletePromise = childTableModel.update({
+        deletePromise = await childTableModel.update({
             deletedById: user.id,
             deletedAt: moment.utc().toISOString()
-        }, {
+        } as any, {
             where: {
                 id: idsToDelete
             },
             returning: true,
             transaction
-        }) as unknown as Promise<[number, T[]]>;
+        } as UpdateOptions) as unknown as Promise<[number, T[]]>;
     }
 
     // resolve all promises
