@@ -1,18 +1,18 @@
 {
-    "name": "@teammaestro/sequelize-common",
-    "version": "13.1.0",
+    "name": "@gtindependence/sequelize-common",
+    "version": "14.0.0",
     "description": "A common set of models and functions that we use throughout most of our Sequelize projects",
     "keywords": [
         "Typescript"
     ],
-    "author": "TeamMaestro",
-    "homepage": "https://github.com/TeamMaestro/sequelize-common",
+    "author": "TeamMaestro + GTIndependence",
+    "homepage": "https://github.com/gtindependence/sequelize-common",
     "repository": {
         "type": "git",
-        "url": "https://github.com/TeamMaestro/sequelize-common.git"
+        "url": "https://github.com/gtindependence/sequelize-common.git"
     },
     "bugs": {
-        "url": "https://github.com/TeamMaestro/sequelize-common/issues"
+        "url": "https://github.com/gtindependence/sequelize-common/issues"
     },
     "license": "ISC",
     "scripts": {
@@ -24,42 +24,42 @@
         "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
-        "@teammaestro/nestjs-common": "^20.1",
-        "moment": "^2.25.3",
-        "sequelize": "^5.18.1",
-        "sequelize-typescript": "^1.0.0",
+        "@gtindependence/nestjs-common": "^21.0.0",
+        "moment": "^2.29.4",
+        "sequelize": "^6.33.0",
+        "sequelize-typescript": "^2.1.5",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
-        "@nestjs/common": "^8.0",
-        "@nestjs/core": "^8.0",
-        "@nestjs/microservices": "^8.0",
-        "@nestjs/passport": "^8.0",
-        "@nestjs/testing": "^8.0",
-        "@nestjs/swagger": "^5.2.0",
-        "@teammaestro/nestjs-common": "^20.1.0",
-        "@teammaestro/node-common": "^4.0.0",
-        "@types/bluebird": "^3.5.27",
+        "@gtindependence/nestjs-common": "^21.0.0",
+        "@gtindependence/node-common": "^6.0.0",
+        "@nestjs/common": "^10.2.6",
+        "@nestjs/core": "^10.2.6",
+        "@nestjs/microservices": "^10.2.6",
+        "@nestjs/passport": "^10.0.2",
+        "@nestjs/swagger": "^7.1.12",
+        "@nestjs/testing": "^10.2.6",
+        "@types/bluebird": "^3.5.39",
         "@types/moment": "^2.13.0",
         "@types/validator": "^10.11.3",
-        "class-validator": "^0.13.1",
-        "config": "^3.3.6",
-        "log4js": "^6.3.0",
-        "moment": "^2.25.3",
-        "passport": "^0.4.1",
+        "class-validator": "^0.14.0",
+        "config": "^3.3.9",
+        "log4js": "^6.9.1",
+        "moment": "^2.29.4",
+        "passport": "^0.6.0",
         "reflect-metadata": "^0.1.13",
-        "rxjs": "^6.6.6",
-        "sequelize": "^5.18.1",
-        "sequelize-typescript": "^1.0.0",
-        "tslint": "^5.19.0",
-        "typescript": "4.6.3"
+        "rxjs": "^7.8.1",
+        "sequelize": "^6.33.0",
+        "sequelize-typescript": "^2.1.5",
+        "tslint": "^6.1.3",
+        "typescript": "5.2.2"
     },
     "dependencies": {
-        "deepmerge": "^4.2.2",
-        "is-plain-object": "^3.0.0"
+        "deepmerge": "^4.3.1",
+        "is-plain-object": "^3.0.1"
     },
     "peerDependenciesMeta": {
-        "@teammaestro/nestjs-common": {
+        "@gtindependence/nestjs-common": {
             "optional": true
         }
     }

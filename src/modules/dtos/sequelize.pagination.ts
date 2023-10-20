@@ -1,4 +1,4 @@
-import { OrderByOptions, Pagination } from '@teammaestro/nestjs-common';
+import { OrderByOptions, Pagination } from '@gtindependence/nestjs-common';
 import { FindOptions } from 'sequelize/types';
 
 export class SequelizePagination extends Pagination {

@@ -1,8 +1,8 @@
 import { AttributesOf } from './attributes-of.type';
 import { UpdateManyToManyAssociationsOptions, UpdateOneToManyAssociationsOptions } from '../interfaces';
 import { AuthenticatedUser } from '../interfaces/authenticated-user.interface';
-import { CreatedByEntity } from '../models/created-by.entity';
-import { JoinTableEntity } from '../models/join-table.entity';
+import { CreatedByEntity } from '../models';
+import { JoinTableEntity } from '../models';
 
 export type UpdateAssociationFillFunction<
     T extends JoinTableEntity | CreatedByEntity<T>,

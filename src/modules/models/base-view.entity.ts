@@ -1,15 +1,23 @@
 import * as Sequelize from 'sequelize';
-import { getAttributes, Model, Table } from 'sequelize-typescript';
+import { getAttributes, Model, ModelStatic, Table } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
-import { AttributesOf } from '../types/attributes-of.type';
+import { AttributesOf } from '../types';
+
+// 1. Created a strict typed model class
+export class TypedModel<T> extends Model {
+    // provides a less strict type Model
+    static get Model(): ModelStatic {
+        return this as any;
+    }
+}
 
 @Table({
     timestamps: false,
     underscored: true,
     freezeTableName: true
 })
-export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
-    static findOne<M extends BaseViewEntity<any>>(options: FindOptions): Sequelize.Promise<M> {
+export class BaseViewEntity<i> extends TypedModel<BaseViewEntity<i>> {
+    static findOne<M extends BaseViewEntity<any>>(options: FindOptions): Promise<M> {
         return new Promise((resolve, reject) => {
             this.findAll(options)
                 .then((results) => {
@@ -18,7 +26,7 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
                 .catch((error) => {
                     reject(error);
                 });
-        }) as unknown as Sequelize.Promise<M>;
+        }) as unknown as Promise<M>;
     }
 
     /**
@@ -71,9 +79,9 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
         const columnDefinition = columnDefinitions[propertyName as string];
         let columnName: string;
         if (!columnDefinition) {
-            throw new Error(`${propertyName} is not defined for the entity ${ctor.name}`);
+            throw new Error(`${String(propertyName)} is not defined for the entity ${ctor.name}`);
         } else if (columnDefinition.type === Sequelize.VIRTUAL) {
-            throw new Error(`${propertyName} is a virtual property and therefore is not a column`);
+            throw new Error(`${String(propertyName)} is a virtual property and therefore is not a column`);
         } else if (columnDefinition.field) {
             columnName = columnDefinition.field;
         } else {
