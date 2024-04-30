@@ -28,7 +28,7 @@ export async function updateOneToManyAssociations<
     );
 
     // promise array for all creates and deletes that will need to happen
-    const updatePromises: Promise<T>[] = [];
+    const recordsToUpdate: AttributesOf<T>[] = [];
 
     const recordsToCreate: AttributesOf<T>[] = [];
 
@@ -51,16 +51,30 @@ export async function updateOneToManyAssociations<
 
             const filledRecord = fillFunction(newChildren[i], i, relatedObject, options);
             filledRecord.updatedById = user.id;
+
+            // if the record is being updated, ensure it is not deleted
+            filledRecord.deletedAt = null;
+            filledRecord.deletedById = null;
+
             // update sort order if necessary
-            updatePromises.push(
-                relatedObject.update(filledRecord, { transaction }) as unknown as Promise<T>
-            );
+            recordsToUpdate.push(relatedObject.id);
         }
     }
     const createPromise: Promise<T[]> = childTableModel.bulkCreate(recordsToCreate, {
         returning: true,
         transaction
     }) as unknown as Promise<T[]>;
+
+    const updatePromise = childTableModel.update({
+        updatedById: user.id,
+        updatedAt: moment.utc().toISOString()
+    }, {
+        where: {
+            id: recordsToUpdate
+        },
+        returning: true,
+        transaction
+    });
 
     // create an array of all the records to delete
     const idsToDelete: number[] = Array.from(relationIdsToDelete);
@@ -88,7 +102,7 @@ export async function updateOneToManyAssociations<
         [, deletedRecords]
     ] = await Promise.all([
         createPromise,
-        Promise.all(updatePromises),
+        Promise.all(updatePromise),
         deletePromise
     ]);
 
