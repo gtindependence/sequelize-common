@@ -102,7 +102,7 @@ export async function updateOneToManyAssociations<
         [, deletedRecords]
     ] = await Promise.all([
         createPromise,
-        Promise.all(updatePromise),
+        updatePromise,
         deletePromise
     ]);
 
