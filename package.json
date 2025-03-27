@@ -1,6 +1,6 @@
 {
     "name": "@gtindependence/sequelize-common",
-    "version": "9.0.0",
+    "version": "9.0.1",
     "description": "A common set of models and functions that we use throughout most of our Sequelize projects",
     "keywords": [
         "Typescript"
