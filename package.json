@@ -1,21 +1,21 @@
 {
-    "name": "@teamhive/sequelize-common",
+    "name": "@gtindependence/sequelize-common",
     "version": "9.0.0",
     "description": "A common set of models and functions that we use throughout most of our Sequelize projects",
     "keywords": [
         "Typescript"
     ],
-    "author": "TeamHive",
+    "author": "TeamHive + GTIndependence",
     "contributors": [
-        "John Pinkster <jpinkster>"
+        "John Pinkster <jpinkster>, Reuben Rubio <reubenrubiogti>"
     ],
-    "homepage": "https://github.com/TeamHive/sequelize-common",
+    "homepage": "https://github.com/gtindependence/sequelize-common",
     "repository": {
         "type": "git",
-        "url": "https://github.com/TeamHive/sequelize-common.git"
+        "url": "https://github.com/gtindependence/sequelize-common.git"
     },
     "bugs": {
-        "url": "https://github.com/TeamHive/sequelize-common/issues"
+        "url": "https://github.com/gtindependence/sequelize-common/issues"
     },
     "license": "ISC",
     "scripts": {
