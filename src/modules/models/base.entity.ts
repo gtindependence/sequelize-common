@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize';
 import { Column, Default, Table, Unique } from 'sequelize-typescript';
-import { BaseViewEntity } from './base-view.entity';
 import { SequelizeDate } from '../types/sequelize-date.type';
+import { BaseViewEntity } from './base-view.entity';
 
 @Table({
     paranoid: true,

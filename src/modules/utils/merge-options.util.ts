@@ -1,28 +1,33 @@
-import { FindAndCountOptions, FindOptions, IncludeOptions, WhereOptions } from 'sequelize';
+import { FindAndCountOptions, FindOptions, IncludeOptions, Order, Transaction, WhereOptions } from 'sequelize';
 import { Op } from 'sequelize';
-import deepMerge = require('deepmerge');
-import isPlainObject = require('is-plain-object');
+import { deepmergeCustom } from 'deepmerge-ts';
 
 export type MergeableOptions = FindOptions | FindAndCountOptions | WhereOptions | IncludeOptions;
 
-const isMergeableObject = (object: any) => {
-    if (Array.isArray(object)) {
-        return true;
-    } else {
-        return (isPlainObject as any)(object);
-    }
+const keyedMerges: Record<string, (base: unknown, request: unknown) => unknown> = {
+    include: (base, request) => includeMerge(base as IncludeOptions[], request as IncludeOptions[]),
+    where: (base, request) => whereMerge(base as WhereOptions, request as WhereOptions),
+    order: (base, request) => orderMerge(base as Order, request as Order)
 };
+
+const deepMerge = deepmergeCustom<unknown, object, { key: unknown }>({
+    metaDataUpdater: (_previousMeta, { key }) => ({ key }),
+    mergeArrays: (values, utils, meta) => {
+        const keyedMerge = typeof meta?.key === 'string' ? keyedMerges[meta.key] : undefined;
+        return keyedMerge && values.length === 2 ? keyedMerge(values[0], values[1]) : utils.defaultMergeFunctions.mergeArrays(values);
+    },
+    mergeRecords: (values, utils, meta) => {
+        const keyedMerge = typeof meta?.key === 'string' ? keyedMerges[meta.key] : undefined;
+        return keyedMerge && values.length === 2 ? keyedMerge(values[0], values[1]) : utils.defaultMergeFunctions.mergeRecords(values, utils, meta);
+    }
+});
 
 const includeMerge = (baseIncludes: IncludeOptions[], requestIncludes: IncludeOptions[]) => {
     baseIncludes.forEach((baseInclude) => {
         let foundMatch = false;
         requestIncludes.forEach((requestInclude, index) => {
             if (baseInclude.model === requestInclude.model && baseInclude.as === requestInclude.as) {
-                requestIncludes[index] = deepMerge(baseInclude, requestInclude, {
-                    customMerge,
-                    arrayMerge: concatArray,
-                    isMergeableObject
-                });
+                requestIncludes[index] = deepMerge(baseInclude, requestInclude) as IncludeOptions;
                 foundMatch = true;
             }
         });
@@ -33,7 +38,7 @@ const includeMerge = (baseIncludes: IncludeOptions[], requestIncludes: IncludeOp
     return requestIncludes;
 };
 
-const orderMerge = (baseOrder: any[], requestOrder: any[]) => {
+const orderMerge = (baseOrder: Order, requestOrder: Order) => {
     if (Array.isArray(baseOrder) && Array.isArray(requestOrder)) {
         return [...requestOrder, ...baseOrder];
     } else {
@@ -47,23 +52,7 @@ const whereMerge = (baseWhere: WhereOptions, requestWhere: WhereOptions): WhereO
     };
 };
 
-const customMerge = (key: string) => {
-    if (key === 'include') {
-        return includeMerge;
-    }
-    if (key === 'where') {
-        return whereMerge;
-    }
-    if (key === 'order') {
-        return orderMerge;
-    }
-};
-
-const concatArray = (array1: Array<any>, array2: Array<any>) => {
-    return [...array1, ...array2];
-};
-
-const getTransaction = (baseOptions: any, requestOptions: any) => {
+const getTransaction = (baseOptions: FindOptions, requestOptions: FindOptions) => {
     let transaction;
     if (baseOptions.transaction !== undefined) {
         transaction = baseOptions.transaction;
@@ -76,28 +65,18 @@ const getTransaction = (baseOptions: any, requestOptions: any) => {
     return transaction;
 };
 
-const attachTransaction = (mergedOptions: any, transaction: any) => {
+const attachTransaction = (mergedOptions: FindOptions, transaction: Transaction) => {
     mergedOptions.transaction = transaction;
 };
 
-const _mergeOptions = (baseOptions: any = {}, requestOptions: any = {}): FindOptions => {
-    if (baseOptions === undefined) {
-        return requestOptions;
-    }
-    if (requestOptions === undefined) {
-        return baseOptions;
-    }
+const _mergeOptions = (baseOptions: FindOptions = {}, requestOptions: FindOptions = {}): FindOptions => {
     const transaction = getTransaction(baseOptions, requestOptions);
-    const mergedOptions = deepMerge(baseOptions, requestOptions, {
-        customMerge,
-        arrayMerge: concatArray,
-        isMergeableObject
-    });
+    const mergedOptions = deepMerge(baseOptions, requestOptions);
     attachTransaction(mergedOptions, transaction);
-    return mergedOptions as unknown as FindOptions;
+    return mergedOptions;
 };
 
-export const mergeOptions = (...options: any[]): FindOptions => {
+export const mergeOptions = (...options: FindOptions[]): FindOptions => {
     if (options.length === 0) {
         return {};
     } else {
