@@ -1,14 +1,14 @@
 import { Transaction } from 'sequelize';
 import { ModelCtor } from 'sequelize-typescript';
-import { AuthenticatedUser } from './authenticated-user.interface';
 import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
 import { UpdateAssociationFillFunction } from '../types/update-association-fill-function.type';
+import { AuthenticatedUser } from './authenticated-user.interface';
 
 export interface UpdateOneToManyAssociationsOptions<
     T extends JoinTableEntity | CreatedByEntity<T>,
     AuthenticatedUserType extends AuthenticatedUser = AuthenticatedUser,
-    NewChildrenType = any
+    NewChildrenType = Partial<T>
     > {
     /**
      * The user updating the association

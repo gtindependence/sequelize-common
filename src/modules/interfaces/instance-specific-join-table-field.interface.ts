@@ -1,4 +1,4 @@
 export interface InstanceSpecificJoinTableField {
     identity: string;
-    fields?: any[];
+    fields?: unknown[];
 }

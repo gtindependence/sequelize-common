@@ -3,11 +3,11 @@ import { ModelCtor } from 'sequelize-typescript';
 const defaultDatabaseName = 'DEFAULT_DATABASE_NAME';
 
 export class EntityRegistration {
-    private static databaseModels: { [databaseName: string]: ModelCtor<any>[] } = {
+    private static databaseModels: { [databaseName: string]: ModelCtor[] } = {
         [defaultDatabaseName]: []
     };
 
-    static registerEntity(model: ModelCtor<any>, databaseName?: string) {
+    static registerEntity(model: ModelCtor, databaseName?: string) {
         const database = databaseName || defaultDatabaseName;
 
         if (EntityRegistration.databaseModels[database]) {

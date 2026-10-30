@@ -7,11 +7,11 @@ import { UpdateAssociationFillFunction } from '../types/update-association-fill-
 export type UpdateAssociationSynchronousFillFunction<
     T extends JoinTableEntity | CreatedByEntity<T>,
     AuthenticatedUserType extends AuthenticatedUser = AuthenticatedUser,
-    NewChildrenType = any
+    NewChildrenType = Partial<T>
     > = (...params: Parameters<UpdateAssociationFillFunction<T, AuthenticatedUserType, NewChildrenType>>) => AttributesOf<T>;
 
-export function defaultUpdateManyToManyFillFunction<T extends CreatedByEntity<T>>(childForeignKey: keyof AttributesOf<T>): UpdateAssociationSynchronousFillFunction<T, AuthenticatedUser, any> {
-    return (newChild: CreatedByEntity<any>, _index: number, _existingRecord: T, updateOptions: UpdateManyToManyAssociationsOptions<T, AuthenticatedUser>) => {
+export function defaultUpdateManyToManyFillFunction<T extends CreatedByEntity<T>>(childForeignKey: keyof AttributesOf<T>): UpdateAssociationSynchronousFillFunction<T, AuthenticatedUser, { id?: number }> {
+    return (newChild: CreatedByEntity<{ id?: number }>, _index: number, _existingRecord: T, updateOptions: UpdateManyToManyAssociationsOptions<T, AuthenticatedUser>) => {
         const { parentForeignKey, parentInstanceId } = updateOptions;
         const newJoinTableRecord: AttributesOf<T> = {
             [childForeignKey]: newChild.id,

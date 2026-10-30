@@ -1,14 +1,15 @@
 import * as moment from 'moment';
+import { UpdateOptions } from 'sequelize';
+import { ModelCtor } from 'sequelize-typescript';
 import { AuthenticatedUser } from '../interfaces/authenticated-user.interface';
 import { UpdateOneToManyAssociationsOptions } from '../interfaces';
 import { CreatedByEntity } from '../models';
 import { AttributesOf } from '../types';
-import { UpdateOptions } from 'sequelize';
 
 export async function updateOneToManyAssociations<
     T extends CreatedByEntity<T>,
     AuthenticatedUserType extends AuthenticatedUser = AuthenticatedUser,
-    NewChildrenType = any
+    NewChildrenType = Partial<T>
 >(options: UpdateOneToManyAssociationsOptions<T, AuthenticatedUserType, NewChildrenType>
 ) {
     const {
@@ -63,7 +64,9 @@ export async function updateOneToManyAssociations<
             );
         }
     }
-    const createPromise: Promise<T[]> = await childTableModel.bulkCreate(recordsToCreate as any, {
+    // T's creation attributes can't be expressed generically, so use the untyped model for the static calls
+    const childModel = childTableModel as ModelCtor;
+    const createPromise: Promise<T[]> = await childModel.bulkCreate(recordsToCreate, {
         returning: true,
         transaction
     }) as unknown as Promise<T[]>;
@@ -75,10 +78,10 @@ export async function updateOneToManyAssociations<
     let deletePromise = new Promise<[number, T[]]>(resolve => resolve([0, []]));
     // delete those records
     if (idsToDelete.length > 0 && !upsertOnly) {
-        deletePromise = await childTableModel.update({
+        deletePromise = await childModel.update({
             deletedById: user.id,
             deletedAt: moment.utc().toISOString()
-        } as any, {
+        }, {
             where: {
                 id: idsToDelete
             },

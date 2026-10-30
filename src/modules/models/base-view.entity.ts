@@ -7,7 +7,7 @@ import { AttributesOf } from '../types';
 export class TypedModel<T> extends Model {
     // provides a less strict type Model
     static get Model(): ModelStatic {
-        return this as any;
+        return this as unknown as ModelStatic;
     }
 }
 
@@ -17,16 +17,16 @@ export class TypedModel<T> extends Model {
     freezeTableName: true
 })
 export class BaseViewEntity<i> extends TypedModel<BaseViewEntity<i>> {
-    static findOne<M extends BaseViewEntity<any>>(options: FindOptions): Promise<M> {
-        return new Promise((resolve, reject) => {
+    static findOne<M extends BaseViewEntity<unknown>>(options: FindOptions): Promise<M> {
+        return new Promise<M>((resolve, reject) => {
             this.findAll(options)
                 .then((results) => {
-                    resolve((results && results.length > 0 ? results[0] : undefined) as any);
+                    resolve((results && results.length > 0 ? results[0] : undefined) as unknown as M);
                 })
                 .catch((error) => {
                     reject(error);
                 });
-        }) as unknown as Promise<M>;
+        });
     }
 
     /**
@@ -61,15 +61,18 @@ export class BaseViewEntity<i> extends TypedModel<BaseViewEntity<i>> {
         return columns;
     }
 
-    static getColumnNames<M extends BaseViewEntity<any>>(
+    static getColumnNames<M extends BaseViewEntity<unknown>>(
         this: { new (): M },
         propertyNames: (keyof AttributesOf<M>)[],
         includeTableName = false
     ): string[] {
-        return propertyNames.map((propertyName) => (this as any).getColumnName(propertyName, includeTableName));
+        const ctor = this as unknown as {
+            getColumnName: (propertyName: keyof AttributesOf<M>, includeTableName?: boolean) => string;
+        };
+        return propertyNames.map((propertyName) => ctor.getColumnName(propertyName, includeTableName));
     }
 
-    static getColumnName<M extends BaseViewEntity<any>>(
+    static getColumnName<M extends BaseViewEntity<unknown>>(
         this: { new (): M },
         propertyName: keyof AttributesOf<M>,
         includeTableName = false
@@ -97,7 +100,7 @@ export class BaseViewEntity<i> extends TypedModel<BaseViewEntity<i>> {
         return columnNames.map((columnName) => `${this.tableName}.${columnName}`);
     }
 
-    static getQueryAlias<M extends BaseViewEntity<any>>(
+    static getQueryAlias<M extends BaseViewEntity<unknown>>(
         this: {
             new (): M;
             tableName: string;

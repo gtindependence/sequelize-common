@@ -1,15 +1,15 @@
 import { ModelCtor } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
-import { AuthenticatedUser } from './authenticated-user.interface';
-import { UpdateOneToManyAssociationsOptions } from './update-one-to-many-associations-options.interface';
 import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
 import { AttributesOf } from '../types';
+import { AuthenticatedUser } from './authenticated-user.interface';
+import { UpdateOneToManyAssociationsOptions } from './update-one-to-many-associations-options.interface';
 
 export interface UpdateManyToManyAssociationsOptions<
     T extends JoinTableEntity | CreatedByEntity<T>,
     AuthenticatedUserType extends AuthenticatedUser = AuthenticatedUser,
-    NewChildrenType = any
+    NewChildrenType = Partial<T>
     > extends
     Omit<
     Omit<UpdateOneToManyAssociationsOptions<T, AuthenticatedUserType, NewChildrenType>, 'childTableModel'>,
