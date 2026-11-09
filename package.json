@@ -37,7 +37,7 @@
         "format": "prettier --check src"
     },
     "peerDependencies": {
-        "@gtindependence/nestjs-common": "24.0.0",
+        "@gtindependence/nestjs-common": "24.0.1",
         "moment": "2.31.0",
         "reflect-metadata": "^0.1.13",
         "sequelize": "^6.33.0",
@@ -45,8 +45,8 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
-        "@gtindependence/nestjs-common": "24.0.0",
-        "@gtindependence/node-common": "7.1.1",
+        "@gtindependence/nestjs-common": "24.0.1",
+        "@gtindependence/node-common": "7.1.2",
         "@nestjs/common": "^11.2.8",
         "@nestjs/core": "^11.2.8",
         "@nestjs/microservices": "^11.2.8",
@@ -84,11 +84,11 @@
         }
     },
     "overrides": {
-        "minimatch": "^11.0.1",
+        "glob": "^14.0.4",
         "jest-config": {
             "deepmerge": "4.1.2"
         },
-        "glob": "^14.0.2",
+        "minimatch": "^11.0.5",
         "uuid": "11.1.1"
     }
 }
