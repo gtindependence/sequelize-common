@@ -46,7 +46,7 @@
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@gtindependence/nestjs-common": "24.0.0",
-        "@gtindependence/node-common": "7.1.0",
+        "@gtindependence/node-common": "7.1.1",
         "@nestjs/common": "^11.2.8",
         "@nestjs/core": "^11.2.8",
         "@nestjs/microservices": "^11.2.8",
@@ -61,7 +61,7 @@
         "eslint": "^10.13.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-import-resolver-node": "^0.4.0",
-        "eslint-plugin-import-x": "^4.17.1",
+        "eslint-plugin-import-x": "^4.18.1",
         "jest": "^30.5.2",
         "log4js": "^6.9.1",
         "moment": "2.31.0",
@@ -82,5 +82,13 @@
         "@gtindependence/nestjs-common": {
             "optional": true
         }
+    },
+    "overrides": {
+        "minimatch": "^11.0.1",
+        "jest-config": {
+            "deepmerge": "4.1.2"
+        },
+        "glob": "^14.0.2",
+        "uuid": "11.1.1"
     }
 }
