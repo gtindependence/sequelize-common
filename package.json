@@ -54,7 +54,6 @@
         "@nestjs/swagger": "^11.4.7",
         "@nestjs/testing": "^11.2.8",
         "@types/jest": "^30.0.0",
-        "@types/moment": "^2.13.0",
         "@types/validator": "^10.11.3",
         "class-validator": "^0.14.0",
         "config": "^3.3.9",
